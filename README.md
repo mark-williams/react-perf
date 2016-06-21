@@ -20,3 +20,14 @@ const lotteryReducer = (state=initialState, action) => {
 const lotteryStore = createStore(lotteryReducer);
 ~~~
 
+This can be further simplified by using Redux' combine reducers:
+
+~~~
+const reducer = combineReducers( {
+    numbers, 
+    chosen
+});
+
+const lotteryStore = createStore(reducer);
+~~~
+
