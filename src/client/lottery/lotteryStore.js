@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { thunk } from 'redux-thunk';
 import numbers from './numbersReducer';
 import chosen from './chosenReducer';
@@ -8,13 +8,11 @@ const initialState = {
     chosen: []
 };
 
-const lotteryReducer = (state=initialState, action) => {
-    return {
-        numbers: numbers(state.numbers, action),
-        chosen: chosen(state.chosen, action)
-    };
-};
+const reducer = combineReducers( {
+    numbers, 
+    chosen
+});
 
-const lotteryStore = createStore(lotteryReducer);
+const lotteryStore = createStore(reducer);
 
 export default lotteryStore;

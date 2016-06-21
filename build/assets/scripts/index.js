@@ -20749,17 +20749,12 @@
 	    chosen: []
 	};
 	
-	var lotteryReducer = function lotteryReducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
+	var reducer = (0, _redux.combineReducers)({
+	    numbers: _numbersReducer2.default,
+	    chosen: _chosenReducer2.default
+	});
 	
-	    return {
-	        numbers: (0, _numbersReducer2.default)(state.numbers, action),
-	        chosen: (0, _chosenReducer2.default)(state.chosen, action)
-	    };
-	};
-	
-	var lotteryStore = (0, _redux.createStore)(lotteryReducer);
+	var lotteryStore = (0, _redux.createStore)(reducer);
 	
 	exports.default = lotteryStore;
 
