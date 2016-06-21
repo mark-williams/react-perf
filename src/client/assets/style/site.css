@@ -1,0 +1,23 @@
+body {
+	font-size: 1.4rem;
+	color: #444;
+}
+
+.number {
+	float: left;
+	width: 3em;
+	color: #333;
+	background-color: #fff;
+	text-align: center;
+	margin: 0.2em 0.2em 0 0;
+}
+
+.number.selected {
+	color: #fff;
+	background-color: #806;
+}
+
+.chosen {
+	float: left;
+	margin-right: 0.7em;
+}
