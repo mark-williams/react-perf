@@ -18,11 +18,11 @@ const Lottery = class extends React.Component {
         lotteryStore.subscribe(this.onStoreUpdated.bind(this));
         
         
-        setInterval(this.refresh, REFRESHINTERVAL);
+        setInterval(this.refresh.bind(this), REFRESHINTERVAL);
     }
 
     refresh() {
-        lotteryStore.dispatch(chooseNumbers(SELECTIONSIZE));
+        lotteryStore.dispatch(chooseNumbers(this.state.numbers, SELECTIONSIZE));
     }
 
     onStoreUpdated() {

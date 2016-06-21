@@ -1,5 +1,4 @@
 import { INIT, REFRESH, CHOOSE } from './lotteryActions';
-import selectFrom from './selection';
 
 const getNumberPool = (count) => {
     let numbers = [];
@@ -10,24 +9,13 @@ const getNumberPool = (count) => {
     return numbers;
 };
 
-
-
-const initialState = {
-    numbers: [],
-    chosen: []
-};
-
-const numbersReducer = (state = initialState, action) => {
+const numbers = (state = [], action) => {
     switch (action.type) {
         case INIT:
-            return Object.assign({}, state, { numbers: getNumberPool(action.value) });
-
-        case CHOOSE:
-            let selected = selectFrom(state.numbers, action.value);
-            return Object.assign({}, state, { chosen: selected});
+            return getNumberPool(action.value);
     }
 
     return state;
 };
 
-export default numbersReducer;
+export default numbers;

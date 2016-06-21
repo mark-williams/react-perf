@@ -20419,7 +20419,7 @@
 	
 	var _lotteryStore2 = _interopRequireDefault(_lotteryStore);
 	
-	var _lotteryActions = __webpack_require__(189);
+	var _lotteryActions = __webpack_require__(190);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -20445,14 +20445,14 @@
 	        _this.state = _lotteryStore2.default.getState();
 	        _lotteryStore2.default.subscribe(_this.onStoreUpdated.bind(_this));
 	
-	        setInterval(_this.refresh, REFRESHINTERVAL);
+	        setInterval(_this.refresh.bind(_this), REFRESHINTERVAL);
 	        return _this;
 	    }
 	
 	    _createClass(Lottery, [{
 	        key: 'refresh',
 	        value: function refresh() {
-	            _lotteryStore2.default.dispatch((0, _lotteryActions.chooseNumbers)(SELECTIONSIZE));
+	            _lotteryStore2.default.dispatch((0, _lotteryActions.chooseNumbers)(this.state.numbers, SELECTIONSIZE));
 	        }
 	    }, {
 	        key: 'onStoreUpdated',
@@ -20727,18 +20727,39 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	
 	var _redux = __webpack_require__(175);
 	
-	var _numbersReducer = __webpack_require__(188);
+	var _reduxThunk = __webpack_require__(188);
+	
+	var _numbersReducer = __webpack_require__(189);
 	
 	var _numbersReducer2 = _interopRequireDefault(_numbersReducer);
 	
+	var _chosenReducer = __webpack_require__(193);
+	
+	var _chosenReducer2 = _interopRequireDefault(_chosenReducer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var lotteryStore = (0, _redux.createStore)(_numbersReducer2.default);
+	var initialState = {
+	    numbers: [],
+	    chosen: []
+	};
+	
+	var lotteryReducer = function lotteryReducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+	
+	    return {
+	        numbers: (0, _numbersReducer2.default)(state.numbers, action),
+	        chosen: (0, _chosenReducer2.default)(state.chosen, action)
+	    };
+	};
+	
+	var lotteryStore = (0, _redux.createStore)(lotteryReducer);
 	
 	exports.default = lotteryStore;
 
@@ -21608,6 +21629,34 @@
 
 /***/ },
 /* 188 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	function createThunkMiddleware(extraArgument) {
+	  return function (_ref) {
+	    var dispatch = _ref.dispatch;
+	    var getState = _ref.getState;
+	    return function (next) {
+	      return function (action) {
+	        if (typeof action === 'function') {
+	          return action(dispatch, getState, extraArgument);
+	        }
+	
+	        return next(action);
+	      };
+	    };
+	  };
+	}
+	
+	var thunk = createThunkMiddleware();
+	thunk.withExtraArgument = createThunkMiddleware;
+	
+	exports['default'] = thunk;
+
+/***/ },
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21616,13 +21665,7 @@
 	    value: true
 	});
 	
-	var _lotteryActions = __webpack_require__(189);
-	
-	var _selection = __webpack_require__(190);
-	
-	var _selection2 = _interopRequireDefault(_selection);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var _lotteryActions = __webpack_require__(190);
 	
 	var getNumberPool = function getNumberPool(count) {
 	    var numbers = [];
@@ -21633,49 +21676,19 @@
 	    return numbers;
 	};
 	
-	var initialState = {
-	    numbers: [],
-	    chosen: []
-	};
-	
-	var numbersReducer = function numbersReducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	var numbers = function numbers() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
 	    var action = arguments[1];
 	
 	    switch (action.type) {
 	        case _lotteryActions.INIT:
-	            return Object.assign({}, state, { numbers: getNumberPool(action.value) });
-	
-	        case _lotteryActions.CHOOSE:
-	            var selected = (0, _selection2.default)(state.numbers, action.value);
-	            return Object.assign({}, state, { chosen: selected });
+	            return getNumberPool(action.value);
 	    }
 	
 	    return state;
 	};
 	
-	exports.default = numbersReducer;
-
-/***/ },
-/* 189 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var REFRESH = exports.REFRESH = 'REFRESH';
-	var CHOOSE = exports.CHOOSE = 'CHOOSE';
-	var INIT = exports.INIT = 'INIT';
-	
-	var initPool = exports.initPool = function initPool(number) {
-	    return { type: INIT, value: number };
-	};
-	
-	var chooseNumbers = exports.chooseNumbers = function chooseNumbers(count) {
-	    return { type: CHOOSE, value: count };
-	};
+	exports.default = numbers;
 
 /***/ },
 /* 190 */
@@ -21686,8 +21699,38 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.chooseNumbers = exports.initPool = exports.INIT = exports.CHOOSE = exports.REFRESH = undefined;
 	
-	var _underscore = __webpack_require__(191);
+	var _selection = __webpack_require__(191);
+	
+	var _selection2 = _interopRequireDefault(_selection);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var REFRESH = exports.REFRESH = 'REFRESH';
+	var CHOOSE = exports.CHOOSE = 'CHOOSE';
+	var INIT = exports.INIT = 'INIT';
+	
+	var initPool = exports.initPool = function initPool(number) {
+	    return { type: INIT, value: number };
+	};
+	
+	var chooseNumbers = exports.chooseNumbers = function chooseNumbers(numberPool, count) {
+	    var chosen = (0, _selection2.default)(numberPool, count);
+	    return { type: CHOOSE, chosenValues: chosen };
+	};
+
+/***/ },
+/* 191 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _underscore = __webpack_require__(192);
 	
 	var _underscore2 = _interopRequireDefault(_underscore);
 	
@@ -21716,7 +21759,7 @@
 	exports.default = selectFrom;
 
 /***/ },
-/* 191 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
@@ -23291,6 +23334,32 @@
 	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  }
 	}).call(undefined);
+
+/***/ },
+/* 193 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _lotteryActions = __webpack_require__(190);
+	
+	var chosen = function chosen() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case _lotteryActions.CHOOSE:
+	            return action.chosenValues;
+	    }
+	
+	    return state;
+	};
+	
+	exports.default = chosen;
 
 /***/ }
 /******/ ]);

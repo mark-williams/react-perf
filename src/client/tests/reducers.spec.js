@@ -1,5 +1,6 @@
 import { INIT, REFRESH, CHOOSE } from '../lottery/lotteryActions';
-import numbersReducer from '../lottery/numbersReducer';
+import numbers from '../lottery/numbersReducer';
+import chosen from '../lottery/chosenReducer';
 import _ from 'underscore';
 
 
@@ -8,27 +9,34 @@ var expect = chai.expect;
 
 describe('Lottery reducer tests', function () {
 
-    beforeEach(function() {
-        
+    describe('Numbers reducer', function() {
+
+        describe('Should return default state if action is unsupported', function() {
+            let state = numbers(undefined, { type: 'BOGUS' });
+            expect(state).to.eql([]);
+        });
+
+        describe('INIT', function() {
+            it('Should initialise the number pool with the requested size', function() {
+                let state = numbers(undefined, { type: INIT, value: 5  });
+                expect(state).to.eql([1,2,3,4,5]);
+            })
+        });
     });
 
-    describe('Should return default state if action is unsupported', function() {
-        let state = numbersReducer(undefined, { type: 'BOGUS' });
-        expect(state.numbers).to.eql([]);
-    });
+    
+    describe('Choose reducer', function() {
 
-    describe('INIT', function() {
-        it('Should initialise the number pool with the requested size', function() {
-            let state = numbersReducer(undefined, { type: INIT, value: 5  });
-            expect(state.numbers).to.eql([1,2,3,4,5]);
-        })
-    });
+        describe('Should return default state if action is unsupported', function() {
+            let state = chosen(undefined, { type: 'BOGUS' });
+            expect(state).to.eql([]);
+        });
 
-    describe('CHOOSE', function() {
-        it('Should set the chosen numbers', function() {
-            let state = numbersReducer(undefined, { type: INIT, value: 10 });
-            state = numbersReducer(state, { type: CHOOSE, value: 3 });
-            expect(state.chosen.length).to.equal(3);
+        describe('CHOOSE', function() {
+            it('Should set the chosen numbers', function() {
+                let state = chosen(undefined, { type: CHOOSE, chosenValues: [1, 5, 9] });
+                expect(state).to.eql([1, 5, 9]);
+            });
         });
     });
 });
