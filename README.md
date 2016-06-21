@@ -6,5 +6,17 @@ I wanted to explore a reasonably large set of arbitary data, so came up with thi
 
 So I could quickly change the amount of items in the pool I have created a Redux action which initialises the pool (if this was reasonably static I could have set this as an initial state in the Redux store). 
 
+###Split reducers
+The store now is now composed of reducers:
 
+~~~
+const lotteryReducer = (state=initialState, action) => {
+    return {
+        numbers: numbers(state.numbers, action),
+        chosen: chosen(state.chosen, action)
+    };
+};
+
+const lotteryStore = createStore(lotteryReducer);
+~~~
 
