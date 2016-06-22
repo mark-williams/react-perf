@@ -31,3 +31,16 @@ const reducer = combineReducers( {
 const lotteryStore = createStore(reducer);
 ~~~
 
+###Performance improvement
+As the full state tree is updated after the CHOOSE (or indeed, any) action, this casuses a re-render for all of the numbers is the pool. This doesn't have any noticeable performance hit with a pool of 59 (the UK lottery pool), however if this is made infeasibly large (say, 15,000) the refresh of the chosen numbers is adversely affected.
+
+This has been addressed by ensuring the numbers in the pool are only rendered if they have changed:
+
+~~~
+shouldComponentUpdate(nextProps, nextState) {
+        return (this.props.isSelected !== nextProps.isSelected || 
+                this.props.number !== nextProps.number); 
+    }
+~~~
+
+(Of course this is an arbitary example; as the numbers in the pool don't change, in practice it may be better to remove them from the Redux state altogether.) 
