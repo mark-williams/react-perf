@@ -8,7 +8,6 @@ const POOLSIZE = 59;
 const SELECTIONSIZE = 6;
 const REFRESHINTERVAL = 3000;
 
-
 const Lottery = class extends React.Component {
     constructor() {
         super();
@@ -42,4 +41,3 @@ const Lottery = class extends React.Component {
 }
 
 export default Lottery;
-

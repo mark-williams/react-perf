@@ -11,8 +11,12 @@ const Number = class extends React.Component{
         });
     }
     
+    shouldComponentUpdate(nextProps, nextState) {
+        return (this.props.isSelected !== nextProps.isSelected || 
+                this.props.number !== nextProps.number); 
+    }
+
     componentWillUpdate() {
-        //console.log(this.props.number + ' will render');
     }
 
     render() {
@@ -26,3 +30,4 @@ const Number = class extends React.Component{
 };
 
 export default Number;
+

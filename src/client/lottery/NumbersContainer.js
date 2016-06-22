@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classNames';
 import Number from './Number';
+import _ from 'underscore';
 
 const NumbersContainer = class extends React.Component {
     constructor(props) {
@@ -8,7 +9,7 @@ const NumbersContainer = class extends React.Component {
     }
 
     renderNumber(n, i) {
-        let isSelected = this.props.chosen.includes(n);
+        let isSelected = _.contains(this.props.chosen, n);
         return <Number key={ i } number={ n } isSelected={ isSelected } />
     }
 
@@ -23,3 +24,4 @@ const NumbersContainer = class extends React.Component {
 }
 
 export default NumbersContainer;
+

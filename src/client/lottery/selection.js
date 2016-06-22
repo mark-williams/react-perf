@@ -15,8 +15,9 @@ const selectFrom = (pool, numberToSelect) => {
             result.push(chosen);
         }
     }
-
-    return result.sort((x, y) => { return y < x; });
+    
+    result.sort((x, y) => { return y < x; });
+    return result;
 };
 
 export default selectFrom;
