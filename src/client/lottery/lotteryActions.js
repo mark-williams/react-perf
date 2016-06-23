@@ -9,7 +9,6 @@ export const initPool = (number) => {
 };
 
 export const chooseNumbers = (numberPool, count) => {
-    let chosen = selectFrom(numberPool, count)
-    //let chosen = [1, 3, 5, 8];
+    let chosen = selectFrom(numberPool, count);
     return { type: CHOOSE, chosenValues: chosen };
 };

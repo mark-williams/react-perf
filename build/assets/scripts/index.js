@@ -23296,7 +23296,6 @@
 	
 	var chooseNumbers = exports.chooseNumbers = function chooseNumbers(numberPool, count) {
 	    var chosen = (0, _selection2.default)(numberPool, count);
-	    //let chosen = [1, 3, 5, 8];
 	    return { type: CHOOSE, chosenValues: chosen };
 	};
 
